@@ -1,0 +1,45 @@
+//based on c++
+
+class = "class", identifier, "{", {terminatedDeclaration},"}", ";"
+includeStatement = "#include", "<", {char}, ">"
+assignment = identifier, "=", rValue, ";"
+assignmentStatement = identifier, binaryAssignmentOperator, rValue
+binaryArithmenticOperator = "+" | "-" | "*" | "/" | "%"
+binaryAssignmentOperator = "=" | "+=" | "-=" | "*=" | "/=" | "%="
+logicalOperator = "and" | "or"
+binaryOperator = binaryLogicalOperator | binaryArithmeticOperator | binaryRelationalOperator | binaryAssignmentOperator | "<<"
+binaryRelationalOperator = "\==" | "!=" | "<" | "<=" | ">" | ">="
+char = safeChar | unsafeChar;
+constant = real | constChar;
+constChar = """ | {char};
+declaration = identifier | assignment;
+declarationStatement =  type, declaration, {",", declaration} | class
+digit = "0" | nonZeroDigit;
+entrancePoint = "int main() {", {terminatedStatement}, "}"
+forStatement = "for", "(", terminatedStatement, terminatedStatement, statement,")", "{", terminatedStatement, "}"
+identifier = safeStartChar, {safeChar}
+ifStatement = "if", "(", rValue, ")", "{", terminatedStatement, "}" \[ "else", "{", terminatedStatement, "}"\]
+integer = digit | (nonZeroDigit, digit);
+lowerCase = "a", "b", ..., "z"
+nonZeroDigit = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
+postfix = "++" | "--"
+predefinedType = "int" | "long int" | "long long int" | "char" | "bool" | "float" | "double"
+program = setUp, entrancePoint;
+real = integer, ".", {0}, integer;
+rValue = term | (unaryOperator, term) | (term, binaryOperator, term)
+safechar = safeStartChar | digit
+safeSpecialChar = "_"
+safeStartChar = upperCase | lowerCase | safeSpecialChar
+setUp = {terminatedDeclaration};
+specialStatement = ifStatement | forStatement
+statement = declarationStatement | assignmentStatement | functionCallStatement | specialStatement | includeStatement
+term = identifier | rValue | ("(", rValue, ")") | (identifier, postfix)
+  declarationStatement = type, declaration, {",", declaration}, ";";
+terminatedStatement = [[statement]], ";"
+type = [typeModifier], (predefinedType | identifier), ["*"];
+typeModifier = "const" | "global" |"static" |...
+unaryArithmeticOperator = "++" | "--"
+unaryLogicalOperator = "!"
+unaryOperator = unaryLogicalOperator | unaryArithmeticOperator 
+unsafeChar = "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*" | "(" | ")" 
+upperCase = "A", "B", ..., "Z"
