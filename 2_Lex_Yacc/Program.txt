@@ -1,0 +1,23 @@
+#include <iostream>
+
+int n = 0;
+bool prime = 0;
+bool iIsPrime;
+
+int main()
+{
+	std::cin >> n;
+	for (int i = 0; i <= n; ++i)
+	{
+	prime = 1;
+		for(int d = 2; d <= i * i; ++d)
+		{
+			if (i % d == 0)
+			{
+				prime = 0;
+			}
+		}
+	iIsPrime = prime;
+	std::cout << iIsPrime;
+	}		
+}
