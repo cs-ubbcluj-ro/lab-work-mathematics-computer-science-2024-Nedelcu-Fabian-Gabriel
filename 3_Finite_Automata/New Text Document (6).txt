@@ -1,0 +1,6 @@
+automata.in = integer, integer, [function], finalStates
+function = state, ":", " ", [relation]
+relation = (state, " ", letter) | (state, " ", letter, ",", relation)
+letter = char | char, ",", [letter]
+finalStates = "FinalStates: ", state | (state, [",", state]) 
+state = string;
