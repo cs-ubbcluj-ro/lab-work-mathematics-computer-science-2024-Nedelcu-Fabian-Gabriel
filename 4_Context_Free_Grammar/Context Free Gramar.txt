@@ -1,0 +1,85 @@
+Terminals:
+	Operators: + ++ - -- / * = <= >= != ! << >> & % ^
+	Separators: ()[]{};:_space'"
+	ReservedWords: unsigned int float char bool const do while class main break continue return and or 
+	EnglishLetters:...
+	SpecialCharacters:! @ # $ %
+	Digits:...
+
+NonTerminals:
+	{epsilon, q1, q2, ..., q13, accessSpecifier, assignment, binaryArithmeticOperator, binaryAssignmentOperator, binaryLogicalOperator, binaryOperator, binaryRelationalOperator, char, classDeclaration, condition, conditionalStatement, constant, constChar, declaration, declarationAssignment, digit, file, forSignature, forStatement, functionArgument, functionArguments, functionCall, functionDeclaration, identifier, integer, lowerCase, nonSemicolonTerminatedStatement, nonZeroDigit, nonZeroDigit, pointer, postfix, predefinedType, preprocessorDirective, real, rValue, safechar, safeSpecialChar, safeStartChar, semicolonTerminatedStatement, simpleVariableDeclaration, sourceFileInclusion, specialStatement, statement, statementBlock, string, stringLiteral, term, type, typeModifier, typeSignature, unaryArithmeticOperator, unaryBitwiseOperator, unaryLogicalOperator, unaryOperator, unsafeChar, upperCase, variableDeclaration}
+
+StartingSymbol:
+	file
+
+Productions:
+
+accessSpecifier									              -> ("public" | "protected" | "private"), ":"
+assignment								                      -> identifier, binaryAssignmentOperator, rValue
+binaryArithmeticOperator								      -> "+" | "-" | "*" | "/" | "%"
+binaryAssignmentOperator								      -> "=" | "+=" | "-=" | "*=" | "/=" | "%="
+binaryLogicalOperator								          -> "and" | "or"
+binaryOperator								                  -> binaryLogicalOperator | binaryArithmeticOperator | binaryRelationalOperator | binaryAssignmentOperator | "<<" | ">>" 
+binaryRelationalOperator								      -> "\==" | "!=" | "<" | "<=" | ">" | ">="
+char														  -> safeChar | unsafeChar;
+classDeclaration								              -> "class", identifier, "{", q1, "}"
+q1 -> (declaration | accessSpecifier) | (q1, q1)
+condition								                      -> "(", rValue ,")"
+conditionalStatement								          -> "if", condition, statement
+constant								                      -> real | constChar | stringLiteral;
+constChar								                      -> "'", char, "'";
+declaration									                  -> (variableDeclaration, ";") | functionDeclaration | classDeclaration
+declarationAssignment								          -> identifier, "=", rValue
+digit														  -> "0" | nonZeroDigit;
+file														  -> q2
+q2 -> (declaration | preprocessorDirective) | (q2, q2)
+forSignature								                  -> "(", variableDeclaration, ";", rValue, nonSemicolonTerminatedStatement ,")"
+forStatement								                  -> "for", forSignature , statement
+functionArgument								              -> identifier | ("\*" functionArgument) | ("&", functionArgument)
+functionArguments								              -> "(", q12, ")"
+q12 -> (functionArgument, q3) | epsilon
+q3 -> (",", functionArguments) | (q3, q3)
+functionCall								                  -> identifier, functionArguments
+functionDeclaration									          -> type, identifier, typeSignature, statementBlock
+identifier								                      -> (safeStartChar, q4) | (identifier, ":", identifier)
+q4 -> safeChar | (q4, q4)
+integer									                      -> digit | (nonZeroDigit, q5);
+q5 -> digit | (q5, q5)
+lowerCase								                      -> "a", "b", ..., "z"
+nonSemicolonTerminatedStatement								  -> (variableDeclaration | assignment | functionCall) | epsilon
+nonZeroDigit								                  -> "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
+nonZeroDigit								                  -> "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
+pointer									                      -> "\" | "const", "\" | q6
+q6 -> pointer | (q6, q6)
+postfix									                      -> "++" | "--"
+predefinedType								                  -> "int" | "long int" | "long long int" | "char" | "bool" | "float" | "double"
+preprocessorDirective								          -> "#", (macro | conditionalInclusions | lineControl | errorDirective | sourceFileInclusion | pragmaDirective)
+real														  -> integer, q13;
+q13 -> (".", q7, integer) | epsilon
+q7 -> 0 | (q7, q7)
+rValue														  ->term | (unaryOperator, term) | (term, binaryOperator, term) 
+safechar								                      -> safeStartChar | digit
+safeSpecialChar									              -> "\_"
+safeStartChar								                  -> upperCase | lowerCase | safeSpecialChar
+semicolonTerminatedStatement								  -> nonSemicolonTerminatedStatement, ";"
+simpleVariableDeclaration								      -> type, (identifier | declarationAssignment)
+sourceFileInclusion									          -> "include", ("<", string, ">") | (""", string, """)
+specialStatement								              -> conditionalStatement | forStatement
+statement								                      -> statementBlock | semicolonTerminatedStatement | specialStatement 
+statementBlock								                  -> ("{", "}") | ("{", statement, "}")
+string								                          -> q8
+q8 -> char | (q8, q8)
+stringLiteral								                  -> """, string, """
+term														  -> identifier | constant | rValue | ("(", rValue, ")") | (identifier, postfix)
+type														  -> q10, (predefinedType | identifier), q11;
+q10 -> typeModifier | epsilon
+q11 -> pointer | epsilon
+typeModifier								                  -> "const" | "global" |"static" |...
+typeSignature								                  -> ("(", ")") | (", simpleVariableDeclaration, ")"
+unaryArithmeticOperator									      -> "++" | "--"
+unaryLogicalOperator								          -> "!"
+unaryOperator								                  -> unaryLogicalOperator | unaryArithmeticOperator | unaryBitwiseOperator
+unsafeChar								                      -> "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*" | "(" | ")"
+upperCase								                      -> "A", "B", ..., "Z"
+variableDeclaration									          -> simpleVariableDeclaration, q9
+q9 -> (",", (identifier | declarationAssignment)) | (q9, q9)
